@@ -11,18 +11,13 @@ module Fog
           unless object_name
             raise ArgumentError.new('object_name is required')
           end
-          host, path = if bucket_name =~ /^(?:[a-z]|\d(?!\d{0,2}(?:\.\d{1,3}){3}$))(?:[a-z0-9]|\-(?![\.])){1,61}[a-z0-9]$/
-            ["#{bucket_name}.#{@host}", object_name]
-          else
-            [@host, "#{bucket_name}/#{object_name}"]
-          end
           scheme_host_path_query({
             :scheme   => options[:scheme],
             :headers  => {},
-            :host     => host,
+            :host     => @host,
             :port     => @port,
             :method   => 'GET',
-            :path     => path,
+            :path     => "#{bucket_name}/#{object_name}",
             :query    => options[:query]
           }, expires)
         end
