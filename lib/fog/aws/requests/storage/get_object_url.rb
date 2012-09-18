@@ -15,7 +15,7 @@ module Fog
             :scheme   => options[:scheme],
             :headers  => {},
             :host     => @host,
-            :port     => @port,
+            :port     => options[:port] || @port,
             :method   => 'GET',
             :path     => "#{bucket_name}/#{object_name}",
             :query    => options[:query]

@@ -5,7 +5,7 @@ module Fog
       module GetObjectHttpsUrl
 
         def get_object_https_url(bucket_name, object_name, expires, options = {})
-          get_object_url(bucket_name, object_name, expires, options.merge(:scheme => 'https'))
+          get_object_url(bucket_name, object_name, expires, options.merge(:scheme => 'https', :port => 443))
         end
 
       end
