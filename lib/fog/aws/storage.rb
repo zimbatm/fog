@@ -6,6 +6,11 @@ module Fog
     class AWS < Fog::Service
       extend Fog::AWS::CredentialFetcher::ServiceMethods
 
+      DEFAULT_SCHEME_PORT = {
+        'http' => 80,
+        'https' => 443
+      }
+
       requires :aws_access_key_id, :aws_secret_access_key
       recognizes :endpoint, :region, :host, :path, :port, :scheme, :persistent, :use_iam_profile, :aws_session_token, :aws_credentials_expire_at
 
@@ -91,10 +96,7 @@ module Fog
 
         def scheme_host_path_query(params, expires)
           params[:scheme] ||= @scheme
-          if params[:port] == 80 && params[:scheme] == 'http'
-            params.delete(:port)
-          end
-          if params[:port] == 443 && params[:scheme] == 'https'
+          if params[:port].to_i == DEFAULT_SCHEME_PORT[params[:scheme]]
             params.delete(:port)
           end
           params[:headers] ||= {}
@@ -278,15 +280,15 @@ module Fog
             options[:region] ||= 'us-east-1'
             @region = options[:region]
             @host = options[:host] || case options[:region]
-            when 'us-east-1'
+            when 'us-east-1', ''
               's3.amazonaws.com'
             else
               "s3-#{options[:region]}.amazonaws.com"
             end
             @path       = options[:path]        || '/'
             @persistent = options.fetch(:persistent, false)
-            @port       = options[:port]        || 443
             @scheme     = options[:scheme]      || 'https'
+            @port       = options[:port]        || DEFAULT_SCHEME_PORT[@scheme]
           end
           @connection = Fog::Connection.new("#{@scheme}://#{@host}:#{@port}#{@path}", @persistent, @connection_options)
         end
