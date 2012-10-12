@@ -8,10 +8,6 @@ module Fog
 
 end
 
-# FIXME: these should go away (force usage of Fog::[Compute, CDN, DNS, Storage]  etc)
-require 'fog/providers'
-require 'fog/terremark'
-
 require 'fog/compute'
 require 'fog/identity'
 require 'fog/image'
